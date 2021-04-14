@@ -34,8 +34,8 @@ class Config(object):
 
     heads = {'hm':1, 'wh':2, 'reg':2}
     head_conv = 64
-    model_name = 'resnet18'
-    pretrained = True
+    model_name = 'resnet50'
+    pretrained = False
     device_inference = 'cuda'
 
     custom_net = False
