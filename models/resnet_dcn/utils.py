@@ -32,9 +32,9 @@ def inference(net, img, infos, topK=40, return_hm=False, th=None):
 
     _, _, h, w = img.shape
     b, c, output_h, output_w = pred_hm.shape
-    # print('Before pool_nms: ', pred_hm.shape)
+
     pred_hm = pool_nms(pred_hm)
-    # print('After pool_nms: ', pred_hm.shape)
+
     scores, index, clses, ys, xs = topk_score(pred_hm, K=topK)
 
     reg = gather_feature(pred_offset, index, use_transform=True)
@@ -43,7 +43,7 @@ def inference(net, img, infos, topK=40, return_hm=False, th=None):
     ys = ys.view(b, topK, 1) + reg[:, :, 1:2]
 
     wh = gather_feature(pred_wh, index, use_transform=True)
-    # print("Wh shape: ", wh.shape)
+
     wh = wh.reshape(b, topK, 2)
         
 
@@ -62,8 +62,6 @@ def inference(net, img, infos, topK=40, return_hm=False, th=None):
         batch_boxes[:, [1, 3]] *= infos[batch]['raw_height'] / output_h
         batch_boxes[:, [0, 2]] -= infos[batch]['pad_width']
         batch_boxes[:, [1, 3]] -= infos[batch]['pad_height']
-        # batch_boxes[:, [0, 2]] *= w / output_w
-        # batch_boxes[:, [1, 3]] *= h / output_h
 
         batch_scores = scores[batch][mask]
 

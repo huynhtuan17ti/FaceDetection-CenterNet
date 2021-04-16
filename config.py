@@ -31,11 +31,17 @@ class Config(object):
     pretrained_model = 'ctdet_pascal_resdcn18_512.pth'
 
     test_path = '../FaceDetection-CenterNet/test_img'
+    save_img_path = '../FaceDetection-CenterNet/images'
 
     heads = {'hm':1, 'wh':2, 'reg':2}
     head_conv = 64
-    model_name = 'resnet50'
+    model_name = 'resnet18'
     pretrained = False
     device_inference = 'cuda'
 
     custom_net = False
+    resume = True
+
+    # expand bouding boxes to cover the head
+    expand_bbox = True
+    expend_percent = 0.05

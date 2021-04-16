@@ -50,14 +50,6 @@ class CenterLoss(nn.Module):
             ]).view(-1) / self.down_stride
             offset = (ct - ct_int.float()).T.contiguous().view(-1)
 
-            info = {
-                "batch_pos_pred_wh shape" : batch_pos_pred_wh.shape,
-                "wh shape" : wh.shape,
-                "batch_boxes shape" : batch_boxes.shape,
-                "ct_int shape": ct_int.shape,
-            }
-
-            assert batch_pos_pred_wh.shape == wh.shape, "wrong here, error info: {}".format(info)
             wh_loss += self.l1_loss(batch_pos_pred_wh, wh, reduction='sum')
             offset_loss += self.l1_loss(batch_pos_pred_offset, offset, reduction='sum')
 

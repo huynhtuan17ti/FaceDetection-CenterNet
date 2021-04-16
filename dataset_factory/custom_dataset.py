@@ -37,13 +37,16 @@ class FaceDataset(Dataset):
         
         h, w, _ = img.shape
         info['raw_height'], info['raw_width'] = h, w
+        info['raw_bboxes'] = bboxes
 
         if self.mode == 'train':
             img, bboxes = self.transform(img, bboxes, classes)
             classes = [1 for _ in range(len(bboxes))]
         
-        img, bboxes = self.preprocess_img_boxes(img, self.resize_size, boxes = bboxes)
+        img, bboxes, pad_info = self.preprocess_img_boxes(img, self.resize_size, boxes = bboxes)
         info['resize_height'], info['resize_width'] = img.shape[:2]
+        info['pad_width'] = pad_info['pad_width']
+        info['pad_height'] = pad_info['pad_height']
 
         # get center point for each object through its bounding box
         ct = np.array([(bboxes[..., 0] + bboxes[..., 2]) / 2,
@@ -109,7 +112,7 @@ class FaceDataset(Dataset):
         else:
             boxes[:, [0, 2]] = boxes[:, [0, 2]] * scale + (max_sz - nw) // 2
             boxes[:, [1, 3]] = boxes[:, [1, 3]] * scale + (max_sz - nh) // 2
-            return image_paded, boxes
+            return image_paded, boxes, {'pad_width': (max_sz - nw) // 2, 'pad_height':  (max_sz - nh) // 2}
 
 
     def collate_fn(self, data):

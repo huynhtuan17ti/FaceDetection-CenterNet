@@ -1,5 +1,7 @@
 from dataset_factory.custom_dataset import FaceDataset
 from losses.loss import CenterLoss
+from losses.IoU import IoUmetric
+from models.resnet_dcn.utils import inference
 from config import Config
 #from models.custom_resnet50.centernet import CenterNet
 from models.resnet_dcn.get_model import create_model, load_model
@@ -67,6 +69,26 @@ def valid_one_epoch(epoch, net, valid_loader, loss_func):
 
     return total_loss / (step + 1)
 
+def valid_IoU(net, valid_loader):
+    print('Calculating IoU metric ...')
+
+    total_iou = 0
+    iou = IoUmetric()
+    num_image = 0
+
+    pbar = tqdm(enumerate(valid_loader), total = len(valid_loader))
+    for step, (gt) in pbar:
+        gt = [i.cuda() if isinstance(i, torch.Tensor) else i for i in gt]
+        infos = gt[-1]
+        detects = inference(net, gt[0], infos, topK = 40, return_hm = False, th=0.3)
+        num_image += gt[0].shape[0]
+        for batch in range(len(infos)):
+            total_iou += iou.calc(infos[batch]['raw_bboxes'], detects[batch][0])
+        description = f'IoU score: {total_iou/num_image:.4f}'
+        pbar.set_description(description)
+    
+    return total_iou/num_image
+
 if __name__ == '__main__':
     cfg = Config()
     train_loader, valid_loader = prepare_loader(cfg)
@@ -86,7 +108,9 @@ if __name__ == '__main__':
     lr_schedule = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=cfg.milestones, 
                                                      gamma=cfg.gamma, last_epoch=-1)
 
-    #net.load_state_dict(torch.load(cfg.save_path + '/' + 'resnet50.pth'))
+    if cfg.resume:
+        net.load_state_dict(torch.load(cfg.save_path + '/' + cfg.model_name + '.pth'))
+        
     print('Start trainning ...')
     best_loss = 10**9
     for epoch in range(cfg.epochs):

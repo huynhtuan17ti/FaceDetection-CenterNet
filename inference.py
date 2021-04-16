@@ -1,6 +1,6 @@
 from config import Config
 from models.resnet_dcn.get_model import create_model, load_model
-from models.resnet_dcn.test import inference
+from models.resnet_dcn.utils import inference
 import torch
 import cv2
 import os
@@ -31,24 +31,46 @@ def preprocess_img(image, input_ksize):
         
     image_paded = cv2.copyMakeBorder(image_resized, (max_sz - nh) // 2, (max_sz - nh) - (max_sz - nh) // 2,
                                          (max_sz - nw) // 2, (max_sz - nw) - (max_sz - nw) // 2, cv2.BORDER_CONSTANT)
-    # print(image_paded.shape)
-    # print('pad width: ', (max_sz - nw) // 2)
-    # print('pad height: ', (max_sz - nh) // 2)
 
     return image_paded, {'raw_height': h, 'raw_width': w, 'pad_width': (max_sz - nw) // 2, 'pad_height':  (max_sz - nh) // 2}
 
-def show_img(img, boxes, clses, scores):
+def expand_bboxes(bboxes, w, h):
+    expand_w = (bboxes[..., 2] - bboxes[..., 0])*cfg.expend_percent
+    expand_h = (bboxes[..., 3] - bboxes[..., 1])*cfg.expend_percent
+
+    bboxes[..., 0] = bboxes[..., 0] - expand_w
+    bboxes[..., 2] = bboxes[..., 2] + expand_w
+    bboxes[..., 1] = bboxes[..., 1] - expand_h
+    bboxes[..., 3] = bboxes[..., 3] + expand_h
+
+    bboxes[..., 0] = torch.clamp(bboxes[..., 0], 0, w-1)
+    bboxes[..., 2] = torch.clamp(bboxes[..., 2], 0, w-1)
+
+    bboxes[..., 1] = torch.clamp(bboxes[..., 1], 0, h-1)
+    bboxes[..., 3] = torch.clamp(bboxes[..., 3], 0, h-1)
+
+    return bboxes
+
+def show_img(img, boxes, clses, scores, save_path):
     boxes, scores = [i.cpu() for i in [boxes, scores]]
+    h, w, _ = img.shape
+    if cfg.expand_bbox:
+        boxes = expand_bboxes(boxes, w, h)
 
     boxes = boxes.long()
     img = applyBboxes(img, boxes)
 
     boxes = boxes.tolist()
     scores = scores.tolist()
-    #plt.figure(figsize=(10, 10))
+    
     for i in range(len(boxes)):
         plt.text(x=boxes[i][0], y=boxes[i][1], s='{:.4f}'.format(scores[i]), wrap=True, size=10,
                  bbox=dict(facecolor="r", alpha=0.5))
+    
+    cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+
+    plt.xticks([])
+    plt.yticks([])
     plt.imshow(img)
 
 if __name__ == '__main__':
@@ -76,7 +98,7 @@ if __name__ == '__main__':
 
         print('Done! Prepare to show the result ...')
         for img_idx in range(len(detects)):
-            fig = plt.figure(figsize=(15, 15))
+            fig = plt.figure(figsize=(10, 10))
 
             boxes = detects[img_idx][0]
             scores = detects[img_idx][1]
@@ -85,7 +107,7 @@ if __name__ == '__main__':
 
             img = imgs[img_idx]
 
-            show_img(img, boxes, clses, scores)
+            show_img(img, boxes, clses, scores, os.path.join(cfg.save_img_path, 'sample{}.jpg'.format(num)))
             plt.show()
 
 
