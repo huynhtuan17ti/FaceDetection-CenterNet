@@ -8,4 +8,4 @@ Second, I want to know more about the CenterNet, what those function works and h
 Why faces? I want to try the other object detection dataset, so instead of using coco, pascal ... I used human face dataset from google dataset.  
 
 ## Result of detecting on an image  
-![](images/sample0.png)
+![](images/sample1.jpg)
