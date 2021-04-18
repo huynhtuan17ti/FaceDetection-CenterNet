@@ -1,11 +1,15 @@
 # FaceDetection-CenterNet
 Face detection with CenterNet
-## Why I wrote this repository  
-First, the orginal repo implemented CenterNet had unupdated DCNv2, so you can't use CenterNet with higher version pytorch. Same as you, it had been very difficult to reinstall DCNv2 through it related to many factors about gpu, torch version, cuda ... So I came up an idea to implement my custom CenterNet so that I can you it in some future AI competitions (cause I'm very like the feeling when joining to compete with other people).  
-
-Second, I want to know more about the CenterNet, what those function works and how heatmap can help the model performs efficiently. So I think rewrite the paper through coding  is the best way I can figure out my questions.  
+## New in this repository  
+- DCNv2 with torch version 1.5  
+- Simple implementation  
 ## About the dataset  
-Why faces? I want to try the other object detection dataset, so instead of using coco, pascal ... I used human face dataset from google dataset.  
+Human Face dataset from [Open Image Dataset](https://opensource.google/projects/open-images-dataset)  
 
 ## Result of detecting on an image  
 ![](images/sample1.jpg)
+
+## To do  
+- [x] Train with widerface dataset (will update later)  
+- [ ] Experient in more models  
+- [ ] Add face recognition in previous [repository](https://github.com/huynhtuan17ti/FaceNet-OneShotLearning)
