@@ -6,7 +6,7 @@ Face detection with CenterNet
 ## Installation  
 - Clone this repository  
 - Setup DCNv2  
-- Install required packages follow [this](https://github.com/huynhtuan17ti/FaceDetection-CenterNet/blob/main/REQUIREMENTS.md)  
+- Install required packages following [this](https://github.com/huynhtuan17ti/FaceDetection-CenterNet/blob/main/REQUIREMENTS.md)  
 ## About the dataset  
 Human Face dataset from [Open Image Dataset](https://opensource.google/projects/open-images-dataset)  
 
