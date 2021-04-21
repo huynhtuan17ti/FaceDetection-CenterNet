@@ -1,3 +1,7 @@
-/dataset/train
-/dataset/validation
+/GoogleDataset/train
+/GoogleDataset/validation
+/WiderFaceDataset/WIDER_train
+/WiderFaceDataset/WIDER_val
+*__pycache__
+.vscode/
 *.pth

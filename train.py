@@ -11,10 +11,16 @@ from tqdm import tqdm
 import torch
 
 def prepare_loader(cfg):
-    train_ds = FaceDataset(cfg.train_path)
+    if not cfg.use_wider:
+        train_ds = FaceDataset(cfg.train_path)
+    else:
+        train_sd = FaceDataset(cfg.wider_train_path, mode = 'train', wider = True)
     train_loader = DataLoader(train_ds, batch_size=cfg.train_batch, collate_fn=train_ds.collate_fn, shuffle=True)
 
-    valid_ds = FaceDataset(cfg.valid_path, mode='valid')
+    if not cfg.use_wider:
+        valid_ds = FaceDataset(cfg.valid_path, mode='valid')
+    else:
+        valid_ds = FaceDataset(cfg.wider_valid_path, mode='valid', wider = True)
     valid_loader = DataLoader(valid_ds, batch_size=cfg.valid_batch, collate_fn=valid_ds.collate_fn)
 
     return train_loader, valid_loader
@@ -110,6 +116,7 @@ if __name__ == '__main__':
 
     if cfg.resume:
         net.load_state_dict(torch.load(cfg.save_path + '/' + cfg.model_name + '.pth'))
+        print('Load resume model!')
         
     print('Start trainning ...')
     best_loss = 10**9

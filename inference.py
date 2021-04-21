@@ -32,7 +32,9 @@ def preprocess_img(image, input_ksize):
     image_paded = cv2.copyMakeBorder(image_resized, (max_sz - nh) // 2, (max_sz - nh) - (max_sz - nh) // 2,
                                          (max_sz - nw) // 2, (max_sz - nw) - (max_sz - nw) // 2, cv2.BORDER_CONSTANT)
 
-    return image_paded, {'raw_height': h, 'raw_width': w, 'pad_width': (max_sz - nw) // 2, 'pad_height':  (max_sz - nh) // 2}
+    # print("raw height: {}, raw width: {}".format(h, w))
+    # print("pad_height: {}, pad_width: {}".format((largest_side - w) // 2, (largest_side - h) // 2))
+    return image_paded, {'raw_height': h, 'raw_width': w, 'pad_width': (largest_side - w) // 2, 'pad_height':  (largest_side - h) // 2}
 
 def expand_bboxes(bboxes, w, h):
     expand_w = (bboxes[..., 2] - bboxes[..., 0])*cfg.expend_percent
@@ -94,7 +96,7 @@ if __name__ == '__main__':
         inputs = input.unsqueeze(0).to(cfg.device_inference)
         print('Preprocess done !')
 
-        detects = inference(net, inputs, infos, topK = 40, return_hm = False, th=0.3)
+        detects = inference(net, inputs, infos, topK = 50, return_hm = False, th=0.2)
 
         print('Done! Prepare to show the result ...')
         for img_idx in range(len(detects)):
@@ -103,7 +105,18 @@ if __name__ == '__main__':
             boxes = detects[img_idx][0]
             scores = detects[img_idx][1]
             clses = detects[img_idx][2]
-            # hm = detects[img_idx][3]
+            hm = detects[img_idx][3]
+
+            # used to check heat map
+            '''
+            # hm = hm.detach().cpu().numpy()
+            hm = hm.cpu()
+            new_hm = hm.permute(1, 2, 0)
+            new_hm = new_hm.detach().numpy()
+            print(hm.shape)
+            plt.imshow(new_hm[:, :, 0])
+            plt.show()
+            '''
 
             img = imgs[img_idx]
 

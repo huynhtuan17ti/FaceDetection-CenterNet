@@ -1,3 +1,5 @@
+# import sys
+# sys.path.append('../FaceDetection-CenterNet')
 import torch
 import os
 from torch.utils.data import DataLoader, Dataset
@@ -7,31 +9,46 @@ from torchvision import transforms
 from utils import get_img, get_bboxes, heatmap, applyBboxes
 from .dataset_utils import draw_umich_gaussian, gaussian_radius
 from .transform import Transform
+import json
 
 class FaceDataset(Dataset):
-    def __init__(self, path, mode = 'train'):
-        self.image_path = os.path.join(path, 'Image')
-        self.label_path = os.path.join(path, 'Label')
+    def __init__(self, path, mode = 'train', wider = False): # wider = True, use WiderFace dataset
+        self.wider = wider
+        if not wider:
+            self.image_path = os.path.join(path, 'Image')
+            self.label_path = os.path.join(path, 'Label')
+            self.img_list = os.listdir(self.image_path)
+        else:
+            self.image_path = os.path.join(path, 'images')
+            label_path = os.path.join(path, mode + '_label.json')
+            with open(label_path) as json_file:
+                data = json.load(json_file)
+            self.data = data
+            
         self.transform = Transform()
         self.mode = mode
         self.resize_size = (512, 512)
-        self.img_list = os.listdir(self.image_path)
         self.down_stride = 4
 
     def __len__(self):
+        if self.wider:
+            return len(self.data)
         return len(self.img_list)
 
     def __getitem__(self, index):
-        img_path = os.path.join(self.image_path, self.img_list[index])
-        label_path = os.path.join(self.label_path, self.img_list[index][:-4] + '.txt')
+        if not self.wider:
+            img_path = os.path.join(self.image_path, self.img_list[index])
+            label_path = os.path.join(self.label_path, self.img_list[index][:-4] + '.txt')
+            bboxes = get_bboxes(label_path)
+        else:
+            img_path = os.path.join(self.image_path, self.data[index]['path'])
+            bboxes = self.data[index]['bbox']
         
-        info = {}
-
         # get image array and list of bboxes
         img = get_img(img_path)
-        bboxes = get_bboxes(label_path)
         bboxes = np.array(bboxes, dtype=np.float32)
 
+        info = {}
         num_object = len(bboxes)
         classes = [1 for _ in range(num_object)] # init class 1 for all object in image
         
@@ -162,7 +179,7 @@ class FaceDataset(Dataset):
 if __name__ == "__main__":
     # testing
     import matplotlib.pyplot as plt
-    train_ds = FaceDataset('../FaceDetection-CenterNet/dataset/train')
+    train_ds = FaceDataset('../FaceDetection-CenterNet/WiderFaceDataset/WIDER_train', mode = 'train', wider = True)
     train_loader = DataLoader(train_ds, batch_size=2, collate_fn=train_ds.collate_fn)
     col = 2
     row = 2

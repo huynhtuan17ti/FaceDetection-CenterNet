@@ -3,6 +3,8 @@ from torch import nn
 import torch.nn.functional as F
 from config import Config
 
+cfg = Config()
+
 def _sigmoid(x):
     y = torch.clamp(x.sigmoid_(), min=1e-4, max=1-1e-4)
     return y
@@ -53,13 +55,15 @@ def inference(net, img, infos, topK=40, return_hm=False, th=None):
     half_w, half_h = wh[..., 0:1] / 2, wh[..., 1:2] / 2
     bboxes = torch.cat([xs - half_w, ys - half_h, xs + half_w, ys + half_h], dim=2)
 
+    
     detects = []
     for batch in range(b):
         mask = scores[batch].gt(cfg.score_th if th is None else th)
 
         batch_boxes = bboxes[batch][mask.squeeze(-1), :]
-        batch_boxes[:, [0, 2]] *= infos[batch]['raw_width'] / output_w
-        batch_boxes[:, [1, 3]] *= infos[batch]['raw_height'] / output_h
+        max_sz = max(infos[batch]['raw_width'], infos[batch]['raw_height'])
+        batch_boxes[:, [0, 2]] *= max_sz / output_w
+        batch_boxes[:, [1, 3]] *= max_sz / output_h
         batch_boxes[:, [0, 2]] -= infos[batch]['pad_width']
         batch_boxes[:, [1, 3]] -= infos[batch]['pad_height']
 

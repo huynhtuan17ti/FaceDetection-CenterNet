@@ -46,7 +46,7 @@ class CenterLoss(nn.Module):
             batch_boxes = gt_boxes[batch][gt_nonpad_mask[batch]]
             wh = torch.stack([
                 batch_boxes[:, 2] - batch_boxes[:, 0],
-                batch_boxes[:, 3] - batch_boxes[:, 1]
+                batch_boxes[:, 3] - batch_boxes[:, 1] 
             ]).view(-1) / self.down_stride
             offset = (ct - ct_int.float()).T.contiguous().view(-1)
 
