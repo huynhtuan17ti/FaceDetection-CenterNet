@@ -11,5 +11,5 @@ Human Face dataset from [Open Image Dataset](https://opensource.google/projects/
 
 ## To do  
 - [x] Train with widerface dataset (will update later)  
-- [ ] Experient in more models  
+- [ ] Experience with more models  
 - [ ] Add face recognition in previous [repository](https://github.com/huynhtuan17ti/FaceNet-OneShotLearning)
