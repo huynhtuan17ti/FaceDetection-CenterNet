@@ -11,7 +11,7 @@ Face detection with CenterNet
 Human Face dataset from [Open Image Dataset](https://opensource.google/projects/open-images-dataset)  
 
 ## Result of detecting on an image  
-![](images/sample0.jpg)
+![](images/result_img/sample0.jpg)
 
 ## To do  
 - [x] Train with widerface dataset (will update later)  
