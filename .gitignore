@@ -3,6 +3,6 @@
 /dataset/wider_face/wider_face_split
 /dataset/wider_face/WIDER_train
 /dataset/wider_face/WIDER_val
-__pycache__/
+*.pyc
 .vscode/
 *.pth
