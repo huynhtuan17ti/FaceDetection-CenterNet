@@ -30,7 +30,6 @@ class CenterLoss(nn.Module):
         imgs, gt_boxes, gt_classes, gt_hm, infos = gt
         gt_nonpad_mask = gt_classes.gt(0)
 
-        #print('pred_hm: ', pred_hm.shape, '  gt_wh: ', pred_wh.shape, ' gt_reg: ', pred_offset.shape)
         cls_loss = self.focal_loss(pred_hm, gt_hm)
 
         wh_loss = cls_loss.new_tensor(0.)

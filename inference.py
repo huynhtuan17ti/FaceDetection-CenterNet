@@ -69,11 +69,16 @@ def show_img(img, boxes, clses, scores, save_path):
         plt.text(x=boxes[i][0], y=boxes[i][1], s='{:.4f}'.format(scores[i]), wrap=True, size=10,
                  bbox=dict(facecolor="r", alpha=0.5))
     
-    cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
-
     plt.xticks([])
     plt.yticks([])
     plt.imshow(img)
+
+    # save image
+    resize_sz = 800
+    new_w = w * resize_sz//w
+    new_h = h * resize_sz//w
+    img = cv2.resize(img, (new_w, new_h))
+    cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
 
 if __name__ == '__main__':
     cfg = Config()

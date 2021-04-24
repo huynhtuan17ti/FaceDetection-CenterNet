@@ -1,7 +1,8 @@
-/GoogleDataset/train
-/GoogleDataset/validation
-/WiderFaceDataset/WIDER_train
-/WiderFaceDataset/WIDER_val
-*__pycache__
+/dataset/google_face/train
+/dataset/google_face/validation
+/dataset/wider_face/wider_face_split
+/dataset/wider_face/WIDER_train
+/dataset/wider_face/WIDER_val
+__pycache__/
 .vscode/
 *.pth
