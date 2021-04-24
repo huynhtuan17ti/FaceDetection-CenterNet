@@ -16,4 +16,7 @@ Human Face dataset from [Open Image Dataset](https://opensource.google/projects/
 ## To do  
 - [x] Train with widerface dataset (will update later)  
 - [ ] Experience with more models  
-- [ ] Add face recognition in previous [repository](https://github.com/huynhtuan17ti/FaceNet-OneShotLearning)
+- [ ] Add face recognition in previous [repository](https://github.com/huynhtuan17ti/FaceNet-OneShotLearning)  
+## Reference  
+- Orginal repository [CenterNet](https://github.com/xingyizhou/CenterNet)  
+- Paper [CenterNet: Keypoint Triplets for Object Detection](https://arxiv.org/abs/1904.08189)  
