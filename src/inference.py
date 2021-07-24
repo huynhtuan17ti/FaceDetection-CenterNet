@@ -112,17 +112,6 @@ if __name__ == '__main__':
             clses = detects[img_idx][2]
             hm = detects[img_idx][3]
 
-            # used to check heat map
-            '''
-            # hm = hm.detach().cpu().numpy()
-            hm = hm.cpu()
-            new_hm = hm.permute(1, 2, 0)
-            new_hm = new_hm.detach().numpy()
-            print(hm.shape)
-            plt.imshow(new_hm[:, :, 0])
-            plt.show()
-            '''
-
             img = imgs[img_idx]
 
             show_img(img, boxes, clses, scores, os.path.join(cfg.save_img_path, 'sample{}.jpg'.format(num)))

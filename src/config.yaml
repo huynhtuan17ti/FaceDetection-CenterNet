@@ -1,0 +1,40 @@
+img_size: 512
+down_stride: 4
+
+gpu: 0
+class_name: ['face']
+
+Loss: # hyperparameters for loss function
+  alpha: 1.
+  beta: 0.1
+  gamma: 1.
+
+CNN:
+  model_name: 'resnet18'
+  heads: {'hm':1, 'wh':2, 'reg':2}
+  head_conv: 64
+  pretrained: True
+  pretrained_path: 'pretrained_model'
+  pretrained_model: 'ctdet_pascal_resdcn18_512.pth'
+
+Optimizer: # hyperparameters for optimize alogorithms
+  lr: 1.25e-4
+  gamma: 0.1
+  weight_decay: 1e-6
+  milestones: [15, 25, 30]
+  epochs: 35
+
+score_th: 0.1
+train_batch: 16
+valid_batch: 32
+
+# Human faces from google dataset
+train_path: 'dataset/google_face/train'
+valid_path: 'dataset/google_face/validation'
+
+# WiderFace dataset
+wider_train_path: 'dataset/wider_face/WIDER_train'
+wider_valid_path: 'dataset/wider_face/WIDER_val'
+train_label_path: 'dataset/wider_face/wider_face_split/wider_face_train_bbx_gt.txt'
+valid_label_path: 'dataset/wider_face/wider_face_split/wider_face_val_bbx_gt.txt'
+json_path: 'dataset/wider_face/Label'

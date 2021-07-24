@@ -1,27 +1,25 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-from .losses import *
-from .loss_utils import *
+from .metrics import *
 import numpy as np
-
 
 def _sigmoid(x):
     y = torch.clamp(x.sigmoid_(), min=1e-4, max=1-1e-4)
     return y
 
 class CenterLoss(nn.Module):
-    def __init__(self):
+    def __init__(self, config):
         super(CenterLoss, self).__init__()
-        self.down_stride = 4
+        self.down_stride = config['down_stride']
 
         self.focal_loss = modified_focal_loss
         self.iou_loss = DIOULoss
         self.l1_loss = F.l1_loss
 
-        self.alpha = 1.
-        self.beta = 0.1
-        self.gamma = 1.
+        self.alpha = config['Loss']['alpha']
+        self.beta = config['Loss']['beta']
+        self.gamma = config['Loss']['gamma']
 
     def forward(self, pred, gt):
         pred_hm = _sigmoid(pred['hm'])
@@ -54,6 +52,3 @@ class CenterLoss(nn.Module):
 
         regr_loss = wh_loss * self.beta + offset_loss * self.gamma
         return cls_loss * self.alpha, regr_loss / (num + 1e-6)
-
-if __name__ == '__main__':
-    loss = CenterLoss()

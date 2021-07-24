@@ -6,3 +6,4 @@
 *.pyc
 .vscode/
 *.pth
+__init__.py

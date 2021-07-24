@@ -3,7 +3,6 @@ from bisect import bisect_right
 from typing import List
 from torch.optim.lr_scheduler import _LRScheduler
 
-
 class WarmupMultiStepLR(_LRScheduler):
     def __init__(
             self,

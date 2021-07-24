@@ -2,7 +2,6 @@ import torch
 import torch.nn.functional as F
 from .loss_utils import gather_feature
 
-
 def bbox_overlaps_diou(bboxes1, bboxes2):
     rows = bboxes1.shape[0]
     cols = bboxes2.shape[0]
@@ -44,12 +43,10 @@ def bbox_overlaps_diou(bboxes1, bboxes2):
         dious = dious.T
     return dious
 
-
 def DIOULoss(pred, gt, size_num=True):
     if size_num:
         return torch.sum(1. - bbox_overlaps_diou(pred, gt)) / pred.size(0)
     return torch.sum(1. - bbox_overlaps_diou(pred, gt))
-
 
 def modified_focal_loss(pred, gt):
     '''
@@ -78,7 +75,6 @@ def modified_focal_loss(pred, gt):
     else:
         loss = -(pos_loss + neg_loss) / num_pos
     return loss
-
 
 def reg_l1_loss(output, mask, index, target):
     pred = gather_feature(output, index, use_transform=True)
