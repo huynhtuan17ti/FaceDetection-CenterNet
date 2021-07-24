@@ -3,6 +3,8 @@ down_stride: 4
 
 gpu: 0
 class_name: ['face']
+model_name: 'resnet18'
+save_path: 'save_model'
 
 Loss: # hyperparameters for loss function
   alpha: 1.
@@ -10,7 +12,6 @@ Loss: # hyperparameters for loss function
   gamma: 1.
 
 CNN:
-  model_name: 'resnet18'
   heads: {'hm':1, 'wh':2, 'reg':2}
   head_conv: 64
   pretrained: True
@@ -20,7 +21,7 @@ CNN:
 Optimizer: # hyperparameters for optimize alogorithms
   lr: 1.25e-4
   gamma: 0.1
-  weight_decay: 1e-6
+  weight_decay: 1.0e-6
   milestones: [15, 25, 30]
   epochs: 35
 
@@ -29,8 +30,8 @@ train_batch: 16
 valid_batch: 32
 
 # Human faces from google dataset
-train_path: 'dataset/google_face/train'
-valid_path: 'dataset/google_face/validation'
+train_path: 'dataset/wider_face/WIDER_train'
+valid_path: 'dataset/wider_face/WIDER_val'
 
 # WiderFace dataset
 wider_train_path: 'dataset/wider_face/WIDER_train'

@@ -1,6 +1,6 @@
 import torch
 import os
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import Dataset
 import numpy as np 
 from torchvision import transforms
 from utils import get_img, get_bboxes, applyBboxes
@@ -11,8 +11,12 @@ import json
 class FaceDataset(Dataset):
     def __init__(self, config, path, transform, mode = 'train'):
         self.config = config
-        self.image_path = os.path.join(path, 'Image')
-        self.label_path = os.path.join(path, 'Label')
+        self.image_path = os.path.join(path, 'images')
+        self.label_path = os.path.join(path, 'label.json')
+        with open(self.label_path) as json_file:
+            data = json.load(json_file)
+        self.data = data
+
         self.img_list = os.listdir(self.image_path)
             
         self.transform = transform
@@ -24,10 +28,9 @@ class FaceDataset(Dataset):
         return len(self.img_list)
 
     def __getitem__(self, index):
-        img_path = os.path.join(self.image_path, self.img_list[index])
-        label_path = os.path.join(self.label_path, self.img_list[index][:-4] + '.txt')
-        bboxes = get_bboxes(label_path)
-        
+        img_path = os.path.join(self.image_path, self.data[index]['path'])
+        bboxes = self.data[index]['bbox']
+
         # get image array and list of bouding boxes
         img = get_img(img_path)
         bboxes = np.array(bboxes, dtype=np.float32)
@@ -43,7 +46,7 @@ class FaceDataset(Dataset):
         if self.mode == 'train':
             img, bboxes = self.transform(img, bboxes, classes)
             classes = [1 for _ in range(len(bboxes))]
-        
+
         img, bboxes, pad_info = preprocess_img_boxes(img, self.resize_size, boxes = bboxes)
         info['resize_height'], info['resize_width'] = img.shape[:2]
         info['pad_width'] = pad_info['pad_width']
@@ -119,31 +122,3 @@ class FaceDataset(Dataset):
         batch_hms = torch.stack(pad_hm_list)
 
         return batch_imgs, batch_boxes, batch_classes, batch_hms, infos
-
-if __name__ == "__main__":
-    # testing
-    import matplotlib.pyplot as plt
-    train_ds = FaceDataset('../FaceDetection-CenterNet/WiderFaceDataset/WIDER_train', mode = 'train', wider = True)
-    train_loader = DataLoader(train_ds, batch_size=2, collate_fn=train_ds.collate_fn)
-    col = 2
-    row = 2
-    cnt = 1
-    fig = plt.figure(figsize=(15, 15))
-    for data in train_loader:
-        batch_imgs, batch_boxes, batch_classes, batch_hms, infos = data
-        for img, bboxes, hm, classes, info in zip(batch_imgs, batch_boxes, batch_hms, batch_classes, infos):
-            #print(img.shape)
-            print(hm.shape)
-            #print(info)
-            new_img = img.permute(1, 2, 0)
-            new_img = np.array(new_img, np.float32)
-            new_img = applyBboxes(new_img, bboxes)
-            fig.add_subplot(row, col, cnt)
-            cnt += 1
-            plt.imshow(new_img)
-            new_hm = hm.permute(1, 2, 0)
-            fig.add_subplot(row, col, cnt)
-            cnt += 1
-            plt.imshow(new_hm[:, :, 0])
-        plt.show()
-        break

@@ -3,7 +3,6 @@
 '''
 import json
 import os
-from config import Config
 
 def convertToJson(annotationsPath, targetDir, nameJson, validOnly):
     infos = []
@@ -51,6 +50,5 @@ def convertToJson(annotationsPath, targetDir, nameJson, validOnly):
         json.dump(infos, outfile)
 
 if __name__ == '__main__':
-    cfg = Config()
-    convertToJson(cfg.wider_train_path, cfg.json_path, "train_label", True)
-    convertToJson(cfg.wider_valid_path, cfg.json_path, "valid_label", True)
+    convertToJson('dataset/wider_face/wider_face_split/wider_face_train_bbx_gt.txt', 'dataset/wider_face/label', "train_label", True)
+    convertToJson('dataset/wider_face/wider_face_split/wider_face_val_bbx_gt.txt', 'dataset/wider_face/label', "valid_label", True)

@@ -27,7 +27,7 @@ def generate_heatmap(num_classes ,output_h, output_w, bboxes_h, bboxes_w, ct, cl
     obj_mask = obj_mask.eq(1)
     return hm, obj_mask
 
-def preprocess_img_boxes(self, image, input_ksize, boxes=None):
+def preprocess_img_boxes(image, input_ksize, boxes=None):
     min_side, max_side = input_ksize
     h, w, _ = image.shape
 

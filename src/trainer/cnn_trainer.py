@@ -9,18 +9,18 @@ class Trainer:
     def __init__(self, config, data_loaders = None):
         self.config = config
         self.device = torch.device('cpu' if config['gpu'] < 0 else 'cuda:%s' % config['gpu'])
-        self.net = create_model(config['model_name'], config['heads'], config['head_conv']).to(self.device)
-        if config['pretrained']:
-            model_path = os.path.join(config['pretrained_path'], config['pretrained_model'])
+        self.net = create_model(config['model_name'], config['CNN']['heads'], config['CNN']['head_conv']).to(self.device)
+        if config['CNN']['pretrained']:
+            model_path = os.path.join(config['CNN']['pretrained_path'], config['CNN']['pretrained_model'])
             self.net = load_model(self.net, model_path)
             for param in self.net.parameters():
                 param.requires_grad = True
             print('Load pretrained model successfully!')
         
         cfg_opt = config['Optimizer']
-        self.CenterLoss = CenterLoss().to(self.device)
+        self.CenterLoss = CenterLoss(config).to(self.device)
         self.optimizer = torch.optim.Adam(self.net.parameters(), lr = cfg_opt['lr'], 
-                                            weight_decay=cfg_opt['weight_decay'])
+                                            weight_decay = cfg_opt['weight_decay'])
         self.lr_schedule = torch.optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=cfg_opt['milestones'], 
                                                         gamma=cfg_opt['gamma'], last_epoch=-1)
         self.best_loss = 10**9
@@ -61,9 +61,9 @@ class Trainer:
 
             self.lr_schedule.step()
             valid_loss = self.validate(epoch, self.valid_loader)
-            if best_loss > valid_loss:
+            if self.best_loss > valid_loss:
                 print('Save best loss at epoch {}!'.format(epoch))
-                best_loss = valid_loss
+                self.best_loss = valid_loss
                 self.save_model()
 
     def validate(self, epoch, loader):

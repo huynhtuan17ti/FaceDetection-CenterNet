@@ -31,13 +31,15 @@ def draw(path_img, bboxes):
     plt.imshow(sample)
 
 def applyBboxes(img, bboxes):
+    bboxes = bboxes.cpu().detach().numpy()
+    bboxes = bboxes.astype(np.int32)
+    img = cv2.UMat(img).get()
     for bbox in bboxes:    
         color = (220, 0, 0)
-        thickness = 4
+        thickness = 2
         bbox[0] = int(bbox[0])
         bbox[1] = int(bbox[1])
         bbox[2] = int(bbox[2])
         bbox[3] = int(bbox[3])
-        img = cv2.UMat(img).get()
         cv2.rectangle(img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, thickness)
     return img

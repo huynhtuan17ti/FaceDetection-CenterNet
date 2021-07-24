@@ -1,8 +1,8 @@
-/dataset/google_face/train
-/dataset/google_face/validation
-/dataset/wider_face/wider_face_split
-/dataset/wider_face/WIDER_train
-/dataset/wider_face/WIDER_val
+src/dataset/google_face/train
+src/dataset/google_face/validation
+src/dataset/wider_face/wider_face_split
+src/dataset/wider_face/WIDER_train
+src/dataset/wider_face/WIDER_val
 *.pyc
 .vscode/
 *.pth
