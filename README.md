@@ -7,16 +7,13 @@ Face detection with CenterNet
 - Clone this repository  
 - Setup DCNv2  
 - Install required packages following [this](https://github.com/huynhtuan17ti/FaceDetection-CenterNet/blob/main/REQUIREMENTS.md)  
+
 ## About the dataset  
-Human Face dataset from [Open Image Dataset](https://opensource.google/projects/open-images-dataset)  
+Wider Face dataset from [Wider Dataset](http://shuoyang1213.me/WIDERFACE/)  
 
 ## Result of detecting on an image  
-![](images/result_img/sample0.jpg)
+![](result/sample0.jpg)  
 
-## To do  
-- [x] Train with widerface dataset (will update later)  
-- [ ] Experience with more models  
-- [ ] Add face recognition in previous [repository](https://github.com/huynhtuan17ti/FaceNet-OneShotLearning)  
 ## Reference  
 - Orginal repository [CenterNet](https://github.com/xingyizhou/CenterNet)  
 - Paper [CenterNet: Keypoint Triplets for Object Detection](https://arxiv.org/abs/1904.08189)  

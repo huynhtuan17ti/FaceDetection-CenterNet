@@ -1,9 +1,7 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-from config import Config
 
-cfg = Config()
 
 def _sigmoid(x):
     y = torch.clamp(x.sigmoid_(), min=1e-4, max=1-1e-4)
@@ -25,8 +23,7 @@ def gather_feature(fmap, index, mask=None, use_transform=False):
         fmap = fmap.reshape(-1, dim)
     return fmap
 
-def inference(net, img, infos, topK=40, return_hm=False, th=None):
-    cfg = Config()
+def inference(config, net, img, infos, topK=40, return_hm=False, th=None):
     pred = net(img)
     pred_hm = _sigmoid(pred['hm'])
     pred_wh = pred['wh']
@@ -58,7 +55,7 @@ def inference(net, img, infos, topK=40, return_hm=False, th=None):
     
     detects = []
     for batch in range(b):
-        mask = scores[batch].gt(cfg.score_th if th is None else th)
+        mask = scores[batch].gt(config['score_th'] if th is None else th)
 
         batch_boxes = bboxes[batch][mask.squeeze(-1), :]
         max_sz = max(infos[batch]['raw_width'], infos[batch]['raw_height'])
@@ -70,7 +67,7 @@ def inference(net, img, infos, topK=40, return_hm=False, th=None):
         batch_scores = scores[batch][mask]
 
         batch_clses = clses[batch][mask]
-        batch_clses = [cfg.CLASSES_NAME[int(cls.item())] for cls in batch_clses]
+        batch_clses = [config['class_name'][int(cls.item())] for cls in batch_clses]
 
         detects.append([batch_boxes, batch_scores, batch_clses, pred_hm[batch] if return_hm else None])
     return detects

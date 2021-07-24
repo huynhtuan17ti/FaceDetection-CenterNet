@@ -1,7 +1,6 @@
 import cv2
 from math import floor
 import numpy as np
-import config
 import matplotlib.pyplot as plt
 
 def get_img(img_path):

@@ -4,6 +4,7 @@ down_stride: 4
 gpu: 0
 class_name: ['face']
 model_name: 'resnet18'
+save_model: 'resnet18.pth'
 save_path: 'save_model'
 
 Loss: # hyperparameters for loss function
@@ -25,17 +26,12 @@ Optimizer: # hyperparameters for optimize alogorithms
   milestones: [15, 25, 30]
   epochs: 35
 
+expand_percent: 0.05
 score_th: 0.1
-train_batch: 16
-valid_batch: 32
+train_batch: 32
+valid_batch: 64
 
-# Human faces from google dataset
 train_path: 'dataset/wider_face/WIDER_train'
 valid_path: 'dataset/wider_face/WIDER_val'
-
-# WiderFace dataset
-wider_train_path: 'dataset/wider_face/WIDER_train'
-wider_valid_path: 'dataset/wider_face/WIDER_val'
-train_label_path: 'dataset/wider_face/wider_face_split/wider_face_train_bbx_gt.txt'
-valid_label_path: 'dataset/wider_face/wider_face_split/wider_face_val_bbx_gt.txt'
-json_path: 'dataset/wider_face/Label'
+test_path: 'images'
+save_img_path: 'result'

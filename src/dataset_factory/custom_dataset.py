@@ -16,16 +16,14 @@ class FaceDataset(Dataset):
         with open(self.label_path) as json_file:
             data = json.load(json_file)
         self.data = data
-
-        self.img_list = os.listdir(self.image_path)
-            
+        
         self.transform = transform
         self.mode = mode
         self.resize_size = (config['img_size'], config['img_size'])
         self.down_stride = config['down_stride']
 
     def __len__(self):
-        return len(self.img_list)
+        return len(self.data)
 
     def __getitem__(self, index):
         img_path = os.path.join(self.image_path, self.data[index]['path'])
