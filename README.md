@@ -12,7 +12,7 @@ Face detection with CenterNet
 Wider Face dataset from [Wider Dataset](http://shuoyang1213.me/WIDERFACE/)  
 
 ## Result of detecting on an image  
-![](result/sample0.jpg)  
+![](images/result/sample0.jpg)  
 
 ## Reference  
 - Orginal repository [CenterNet](https://github.com/xingyizhou/CenterNet)  

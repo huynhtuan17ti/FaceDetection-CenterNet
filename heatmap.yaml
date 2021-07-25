@@ -1,0 +1,18 @@
+img_size: 512
+down_stride: 4
+
+gpu: 0
+class_name: ['face']
+model_name: 'resnet18'
+save_model: 'resnet18.pth'
+save_path: '/home/ryan/Machine_Learning/FaceDetection-CenterNet/src/save_model'
+
+CNN:
+  heads: {'hm':1, 'wh':2, 'reg':2}
+  head_conv: 64
+  pretrained: True
+  pretrained_path: 'pretrained_model'
+  pretrained_model: 'ctdet_pascal_resdcn18_512.pth'
+
+expand_percent: 0.05
+score_th: 0.1
