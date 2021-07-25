@@ -9,3 +9,4 @@ src/images
 *.pth
 __init__.py
 notebooks/.ipynb_checkpoints
+*.mp4
