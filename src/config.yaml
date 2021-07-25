@@ -33,5 +33,5 @@ valid_batch: 64
 
 train_path: 'dataset/wider_face/WIDER_train'
 valid_path: 'dataset/wider_face/WIDER_val'
-test_path: 'images'
-save_img_path: 'result'
+test_path: 'images/test'
+save_img_path: 'images/result'

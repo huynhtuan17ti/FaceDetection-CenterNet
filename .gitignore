@@ -3,7 +3,9 @@ src/dataset/google_face/validation
 src/dataset/wider_face/wider_face_split
 src/dataset/wider_face/WIDER_train
 src/dataset/wider_face/WIDER_val
+src/images
 *.pyc
 .vscode/
 *.pth
 __init__.py
+notebooks/.ipynb_checkpoints
