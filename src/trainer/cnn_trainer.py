@@ -33,6 +33,10 @@ class Trainer:
         save_model_path = os.path.join(self.config['save_path'], self.config['model_name'] + '.pth')
         torch.save(self.net.state_dict(), save_model_path)
 
+    def save_last_model(self):
+        save_model_path = os.path.join(self.config['save_path'], self.config['last_model_name'] + '.pth')
+        torch.save(self.net.state_dict(), save_model_path)
+
     def train(self):
         self.net.train()
         for epoch in range(self.config['Optimizer']['epochs']):

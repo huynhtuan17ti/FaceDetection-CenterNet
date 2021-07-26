@@ -8,3 +8,4 @@ if __name__ == '__main__':
     train_loader, valid_loader = prepare_loader(config)
     cnn = Trainer(config, data_loaders=[train_loader, valid_loader])
     cnn.train()
+    cnn.save_last_model()
