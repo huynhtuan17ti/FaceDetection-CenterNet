@@ -29,6 +29,10 @@ def convertToJson(annotationsPath, targetDir, nameJson, validOnly):
                 if (x2 <= x1 or y2 <= y1):
                     print('[WARNING] Invalid box dimensions in image "{}" x1 y1 w h: {} {} {} {}'.format(imFilename,x1,y1,w,h))
                     continue
+                
+                if (x2-x1)*(y2 - y1) <= 1000:
+                    print('[WARNING] Remove small objects')
+                    continue
 
                 if validOnly and invalid == 1:
                     continue
@@ -50,5 +54,5 @@ def convertToJson(annotationsPath, targetDir, nameJson, validOnly):
         json.dump(infos, outfile)
 
 if __name__ == '__main__':
-    convertToJson('dataset/wider_face/wider_face_split/wider_face_train_bbx_gt.txt', 'dataset/wider_face/label', "train_label", True)
-    convertToJson('dataset/wider_face/wider_face_split/wider_face_val_bbx_gt.txt', 'dataset/wider_face/label', "valid_label", True)
+    convertToJson('dataset/wider_face/wider_face_split/wider_face_train_bbx_gt.txt', 'dataset/wider_face/WIDER_train', "label", True)
+    convertToJson('dataset/wider_face/wider_face_split/wider_face_val_bbx_gt.txt', 'dataset/wider_face/WIDER_val', "label", True)

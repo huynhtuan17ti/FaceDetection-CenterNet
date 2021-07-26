@@ -5,6 +5,7 @@ gpu: 0
 class_name: ['face']
 model_name: 'resnet18'
 save_model: 'resnet18.pth'
+last_model_name: 'resnet18_last.pth'
 save_path: 'save_model'
 
 Loss: # hyperparameters for loss function
@@ -23,8 +24,8 @@ Optimizer: # hyperparameters for optimize alogorithms
   lr: 1.25e-4
   gamma: 0.1
   weight_decay: 1.0e-6
-  milestones: [15, 25, 30]
-  epochs: 35
+  milestones: [10, 18]
+  epochs: 20
 
 expand_percent: 0.05
 score_th: 0.1
