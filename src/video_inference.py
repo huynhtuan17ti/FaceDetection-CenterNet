@@ -5,6 +5,7 @@ import yaml
 from time import time
 from torchvision import transforms 
 import cv2
+import matplotlib.pyplot as plt
 from models.resnet_dcn.get_model import create_model, load_model
 from models.resnet_dcn.utils import inference
 from utils import applyBboxes
@@ -68,6 +69,9 @@ class RealtimeDetection:
         self.config = config
         self.net = self.load_model()
     
+    def get_local_video(self):
+        return cv2.VideoCapture(self._URL)
+
     def get_video_from_url(self):
         play = pafy.new(self._URL).streams[-1]
         assert play is not None, "url doesn't exist"
@@ -82,7 +86,7 @@ class RealtimeDetection:
         input = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])(input)
         inputs = input.unsqueeze(0).to(self.device)
 
-        detects = inference(self.config, self.net, inputs, infos, topK = 50, return_hm = False, th=0.3)
+        detects = inference(self.config, self.net, inputs, infos, topK = 50, return_hm = False, th=0.4)
 
         boxes = detects[0][0]
         scores = detects[0][1]
@@ -99,24 +103,30 @@ class RealtimeDetection:
         return net
 
     def __call__(self):
-        player = self.get_video_from_url()
+        self.net.eval()
+        # player = self.get_video_from_url()
+        player = self.get_local_video()
         assert player.isOpened()
         x_size = int(player.get(cv2.CAP_PROP_FRAME_WIDTH))
         y_size = int(player.get(cv2.CAP_PROP_FRAME_HEIGHT))
         four_cc = cv2.VideoWriter_fourcc(*"MJPG")
         out = cv2.VideoWriter(self.out_file, four_cc, 20, (x_size, y_size))
+        cnt_frame = 0
         while True:
             start_time =  time()
             ret, frame = player.read()
             if ret is None or frame is None:
                 break
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = self.predict_per_frame(frame)
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             end_time = time()
             fps = 1/np.round(end_time - start_time, 3)
             print(f'Frames Per Second: {fps}')
             out.write(frame)
+            cnt_frame += 1
 
 if __name__ == '__main__':
     config = yaml.safe_load(open('config.yaml'))
-    video = RealtimeDetection(config, "https://www.youtube.com/watch?v=nW948Va-l10")
+    video = RealtimeDetection(config, "loki.mp4")
     video()

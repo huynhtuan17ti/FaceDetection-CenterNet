@@ -7,6 +7,7 @@ import os
 from utils import get_img, applyBboxes
 from torchvision import transforms 
 import matplotlib.pyplot as plt
+import numpy as np
 from PIL import Image, ImageDraw
 
 def load_model(cfg, device):
@@ -101,7 +102,7 @@ if __name__ == '__main__':
         inputs = input.unsqueeze(0).to(device)
         print('Preprocess done !')
 
-        detects = inference(config, net, inputs, infos, topK = 50, return_hm = False, th=0.2)
+        detects = inference(config, net, inputs, infos, topK = 40, return_hm = False, th=0.4)
 
         print('Done! Prepare to show the result ...')
         for img_idx in range(len(detects)):
